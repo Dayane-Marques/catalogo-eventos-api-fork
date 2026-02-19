@@ -2,7 +2,7 @@ import { Controller, HttpRequest, HttpResponse } from "@/core/protocols";
 import { CreateUserUseCase } from "../../../application/use-cases/create-user.usecase";
 import { created, resource } from "@/core/http/http-resource";
 import { userLinks } from "../user-hateoas";
-import { CreateUserDTO } from "../../../application/dto";
+import { CreateUserDTO, UserViewModel } from "../../../application/dto";
 import { logger } from "@/core/config/logger";
 import { mapErrorToHttpResponse } from "@/core/http/http-error-response";
 
@@ -22,7 +22,7 @@ export class CreateUserController implements Controller {
 
       const user = await this.useCase.execute(body);
 
-      const resourceResp = resource(
+      const resourceResp = resource<UserViewModel>(
         {
           id: user.id,
           nome: user.nome,
@@ -42,7 +42,7 @@ export class CreateUserController implements Controller {
         email: user.email,
       });
 
-      return created(resourceResp);
+      return created<UserViewModel>(resourceResp);
     } catch (error) {
       logger.error("Erro ao criar usuário", {
         correlationId,

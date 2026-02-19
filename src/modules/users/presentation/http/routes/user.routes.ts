@@ -22,21 +22,24 @@ import { DeleteUserUseCase } from "@/modules/users/application/use-cases/delete-
 import { SequelizeUserRepository } from "@/modules/users/infra/sequelize/sequelize-user.repository";
 
 import { BcryptAdapter } from "@/core/adapters/bcrypt-adapter";
-import { logger } from "@/core/config/logger";
 
 export function registerUserRoutes(router: Router): void {
   const userRepo = new SequelizeUserRepository();
   const encrypter = new BcryptAdapter(12);
 
   const createUserUseCase = new CreateUserUseCase(
-  userRepo,
-  userRepo,
-  encrypter
-);
+    userRepo,
+    userRepo,
+    encrypter,
+  );
 
   const listUsersUseCase = new ListUsersUseCase(userRepo);
   const getUserByIdUseCase = new GetUserByIdUseCase(userRepo);
-  const updateUserUseCase = new UpdateUserUseCase(userRepo, userRepo, encrypter);
+  const updateUserUseCase = new UpdateUserUseCase(
+    userRepo,
+    userRepo,
+    encrypter,
+  );
   const deleteUserUseCase = new DeleteUserUseCase(userRepo, userRepo);
 
   const createUserController = new CreateUserController(createUserUseCase);
@@ -51,21 +54,21 @@ export function registerUserRoutes(router: Router): void {
     authMiddleware,
     authorizeRoles(["Gerente"]),
     validateBody(createUserSchema),
-    adaptRoute(createUserController)
+    adaptRoute(createUserController),
   );
 
   router.get(
     "/usuarios",
     authMiddleware,
     authorizeRoles(["Gerente"]),
-    adaptRoute(listUsersController)
+    adaptRoute(listUsersController),
   );
 
   router.get(
     "/usuarios/:id",
     authMiddleware,
     authorizeRoles(["Gerente"]),
-    adaptRoute(getUserByIdController)
+    adaptRoute(getUserByIdController),
   );
 
   router.put(
@@ -73,13 +76,13 @@ export function registerUserRoutes(router: Router): void {
     authMiddleware,
     authorizeRoles(["Gerente"]),
     validateBody(updateUserSchema),
-    adaptRoute(updateUserController)
+    adaptRoute(updateUserController),
   );
 
   router.delete(
     "/usuarios/:id",
     authMiddleware,
     authorizeRoles(["Gerente"]),
-    adaptRoute(deleteUserController)
+    adaptRoute(deleteUserController),
   );
 }

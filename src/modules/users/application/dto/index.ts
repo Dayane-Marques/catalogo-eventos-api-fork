@@ -3,6 +3,7 @@ import {
   createUserSchema,
   updateUserSchema,
 } from "@/modules/users/presentation/http/validators/user-schemas";
+import { UserRole } from "../../domain/profile/profile-strategy-factory";
 
 export type CreateUserDTO = z.infer<typeof createUserSchema>;
 export type UpdateUserDTO = z.infer<typeof updateUserSchema>;
@@ -13,8 +14,8 @@ export type UpdateUserDto = UpdateUserDTO;
 
 // Tipo básico de usuário “plain”
 export interface UserViewModel {
-  id: number;
+  id?: number;
   nome: string;
   email: string;
-  role: "Gerente" | "Funcionario" | "Cliente";
+  role: UserRole;
 }
